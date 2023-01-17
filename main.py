@@ -1,9 +1,14 @@
 import random
 from config import *
+import aiogram.utils.markdown as md
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
+from aiogram.dispatcher import FSMContext
+from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram import Bot, Dispatcher, types, executor
 
 bot = Bot(token=TOKEN)
-db = Dispatcher(bot)
+
+db = Dispatcher(bot, storage=MemoryStorage())
 
 g_d = {1: "Камень",
         2: "Ножницы",
@@ -12,6 +17,10 @@ g_d = {1: "Камень",
 s_d = {f"You": 0,
         "Bot": 0,
         "all": 0}
+
+
+class Input(StatesGroup):
+    sub = State()
 
 
 @db.message_handler(commands=['start'])
@@ -38,22 +47,32 @@ async def list_update(message: types.Message):
     await message.answer('List is update!!!')
 
 
-@db.message_handler()
-async def game(message: types.Message):
-    bot_choose = g_d[random.randint(1, 3)]
-    user_choose = message.text
+@db.message_handler(commands=['game'])
+async def cmd_start(message: types.Message):
+    await Input.sub.set()
+    await message.reply("Давай поиграем")
 
+
+@db.message_handler(state=Input.sub)
+async def process_name(message: types.Message, state: FSMContext):
+    async with state.proxy() as data:
+        data['sub'] = message.text
+        user_choice = md.bold(data['sub'])
+
+    bot_choose = g_d[random.randint(1, 3)]
     await message.answer(f"Я выбрал {bot_choose}")
 
-    if bot_choose == g_d[1] and user_choose == g_d[2] or bot_choose == g_d[2] and user_choose == g_d[3] or bot_choose == g_d[3] and user_choose == g_d[1]:
+    if bot_choose == g_d[1] and user_choice == g_d[2] or bot_choose == g_d[2] and user_choice == g_d[3] or bot_choose == g_d[3] and user_choice == g_d[1]:
         await message.answer("Я выйграл")
         s_d.update(Bot=s_d['Bot']+1)
-    elif bot_choose == user_choose:
+    elif bot_choose == user_choice:
         await message.answer("Ничья")
     else:
         await message.answer('Ты выйграл')
         s_d.update(You=s_d['You']+1)
     s_d.update(all=s_d['all']+1)
+
+    await state.finish()
 
 
 if __name__ == "__main__":
