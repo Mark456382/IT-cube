@@ -1,6 +1,8 @@
 import random
 from config import *
+from voice_tranclate import speeh
 import aiogram.utils.markdown as md
+from aiogram.types import ContentType, File
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import State, StatesGroup
@@ -73,6 +75,15 @@ async def process_name(message: types.Message, state: FSMContext):
     s_d.update(all=s_d['all']+1)
 
     await state.finish()
+
+
+@db.message_handler(content_types=[ContentType.VOICE])
+async def voice_working(message: types.Message):
+    file_id = message.voice.file_id
+    file = await bot.get_file(file_id)
+    file_path = file.file_path
+    await bot.download_file(file_path, "tg_voice.mp3")
+    await message.bot.send_message(speeh())
 
 
 if __name__ == "__main__":
