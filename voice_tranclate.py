@@ -1,12 +1,17 @@
 import speech_recognition as sr
+from pydub import *
+from os import path
 
 
 def speeh():
     recognizer = sr.Recognizer()
-
+    scr = 'tg_voice.mp3'
+    out = '/voice/tg_vc.wav'
+    sound = AudioSegment.from_mp3(scr)
+    sound.export(out, format='wav')
     ''' recording the sound '''
 
-    with sr.AudioFile("tg_voice.mp3") as source:
+    with sr.AudioFile(r'voice\tg_vc.wav') as source:
         recorded_audio = recognizer.listen(source)
 
     ''' Recorgnizing the Audio '''
