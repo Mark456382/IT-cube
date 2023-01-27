@@ -1,6 +1,9 @@
 import random
+import time
+
 from config import *
-from voice_tranclate import speeh
+import cv2
+from time import sleep
 import aiogram.utils.markdown as md
 from aiogram.types import ContentType, File
 from aiogram.contrib.fsm_storage.memory import MemoryStorage
@@ -28,6 +31,13 @@ class Input(StatesGroup):
 @db.message_handler(commands=['start'])
 async def start(message: types.Message):
     await message.answer(f"{message.from_user.first_name}, Привет!!!")
+
+
+@db.message_handler(commands=['spam'])
+async def spam(message: types.Message):
+    time.sleep(3)
+    for i in range(10000):
+        await message.answer('Ты лох')
 
 
 @db.message_handler(commands=['static'])
@@ -77,13 +87,26 @@ async def process_name(message: types.Message, state: FSMContext):
     await state.finish()
 
 
-@db.message_handler(content_types=[ContentType.VOICE])
-async def voice_working(message: types.Message):
-    file_id = message.voice.file_id
-    file = await bot.get_file(file_id)
-    file_path = file.file_path
-    await bot.download_file(file_path, "tg_voice.mp3")
-    await message.bot.send_message(speeh())
+@db.message_handler(content_types="video")
+async def video_note_sender(message: types.Message):
+    # await message.video[-1].download(destination_file=r'C:\Users\PythonV\PycharmProjects\MetBot\tg_video.mp4')
+    await message.video.download('tg_video.mp4')
+
+    file = "tg_video.mp4"  # путь к файлу с картинкой
+    percent = 20
+    cap = cv2.VideoCapture(file)
+
+    ret, frame = cap.read()
+    width = int(frame.shape[1] * percent / 100)
+    height = int(frame.shape[0] * percent / 100)
+    dim = (width, height)
+    frame_re = cv2.resize(frame, dim)
+    cv2.imshow('frame', frame_re)
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+    await bot.send_video_note(message.chat.id, video_note=open('tg_video.mp4', 'rb'))
 
 
 if __name__ == "__main__":
