@@ -33,6 +33,16 @@ async def start(message: types.Message):
     await message.answer(f"{message.from_user.first_name}, Привет!!!")
 
 
+@db.message_handler(commands=['generate_pass'])
+async def generate_pass(message: types.Message):
+    chars = '+-/*!&$#?=@<>abcdefghijklnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+    key = ''
+    for i in range(12):
+        key += random.choice(chars)
+
+    await message.answer(f"Держи, вот тебе безовасный пароль: {key}")
+
+
 @db.message_handler(commands=['spam'])
 async def spam(message: types.Message):
     time.sleep(3)
