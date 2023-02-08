@@ -77,13 +77,6 @@ async def sub_message(message: types.Message, state: FSMContext):
         await message.answer_sticker('CAACAgIAAxkBAAIdjGPjgOK7QUf8RMGqOPuu0tMVJBAtAALCFwACpFYJSaadQck7d-CWLgQ')
 
 
-# @db.message_handler(Text('Отмена ❌'))
-# async def cancel(message: types.Message, state: FSMContext):
-#     await state.finish()
-#     await message.answer("Заявка отменена. Если у вас появяться вопросы то мы всегда готовы вам помочь ")
-#     await message.answer_sticker('CAACAgIAAxkBAAIdjGPjgOK7QUf8RMGqOPuu0tMVJBAtAALCFwACpFYJSaadQck7d-CWLgQ')
-
-
 @db.message_handler(Text('О нас ☎️'))
 async def we(message: types.Message):
     await message.answer('Мы команда "VektorTeam" и наш проект "deCryptor" '+
