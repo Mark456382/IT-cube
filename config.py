@@ -1,6 +1,8 @@
-TOKEN = '5588087883:AAFTE4wauSpWfjp-XajBLpk9TVArA0Lwgfw'
+# TOKEN = '5588087883:AAFTE4wauSpWfjp-XajBLpk9TVArA0Lwgfw' Тест Токен для бота
+
+TOKEN = '6141093980:AAEg0ffWvSfW0bAqdVK_wE2ZwpHcB1_7fbw'
 FAQ = 'https://telegra.ph/VectorTeam-deCryptor---FAQ-02-07'
 USER = "decryptor.vektor@gmail.com"
-PASSWD = "aq1sw2de3fr4"
+PASSWD = "sonogdhlvwjgbyss"
 SERVER = "smtp.gmail.com"
-PORT = 465
+PORT = 587
