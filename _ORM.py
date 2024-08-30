@@ -12,3 +12,32 @@ class _ORM:
     def checking_state(self, track_id):
         state = self.curs.execute(f'SELECT state FROM users WHERE track_id={track_id}')
         return state
+    
+
+# Первый вариант
+user_lang = 'ru'
+
+if user_lang == 'ru':
+    lang = 0
+else:
+    lang = 1
+
+
+a = {1: ['question', ['answer-ru', 'answer-eng']]}
+
+print(a.get(1)[1][lang])
+
+
+# Второй вариант
+
+user_lang = 'ru'
+
+a = {1: ['question', 'answer-ru']}
+b = {1: ['question', 'answer-eng']}
+
+if user_lang == 'ru':
+    lang = a
+else:
+    lang = b
+
+print(lang.get(1)[1][0])
